@@ -105,7 +105,40 @@ would both read well.
 | Hold duration | `HOLD_MINUTES` |
 | Colours | `:root { ... }` at the top of `<style>` |
 | Backend swap point | the four `Store` methods — see the comment above them |
-| Organiser WhatsApp number | `ORGANISER_WA` — the sign-up form and songs notify both send here |
+| Organiser WhatsApp number | `ORGANISER_WA` — sign-up, songs notify and announcement buttons |
+| Announcements | `const ANNOUNCEMENTS = [...]` |
+| How long undated notices live | `SHELF_LIFE_DAYS` (default 30) |
+
+## Announcements ("What's on")
+
+Edit the `ANNOUNCEMENTS` array. Each item:
+
+```js
+{
+  id:"n7", type:"Workshop", pinned:true,        // pinned shows first + in the top banner
+  title:"Konnakol intensive",
+  body:"Two or three lines.",
+  posted:"2026-08-14",                          // required
+  on:"2026-08-30",                              // optional event date
+  at:"Palakkad",                                // optional location
+  cta:"Reserve a seat"                          // optional — opens WhatsApp to ORGANISER_WA
+}
+```
+
+`type` is one of Concert, Workshop, Festival, Admissions, Notice — each gets its
+own colour.
+
+**Expiry is automatic and deliberate.** An item with an `on` date disappears the
+day after the event. An item without one drops off `SHELF_LIFE_DAYS` after it was
+posted. Past items aren't deleted, just hidden behind a "show anyway" link, and
+they lose their WhatsApp button so nobody messages about a finished event. This
+is the same principle as the teacher freshness badges: the page should never be
+able to quietly go stale.
+
+Rather than hand-writing the block, use **Post an announcement** on the page —
+it previews the item in place and hands you a formatted block to paste in. The
+preview is local to that browser; it's live for everyone once the block is in the
+file and the site is redeployed.
 
 ## The teacher sign-up form
 
