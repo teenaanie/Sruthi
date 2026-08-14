@@ -40,7 +40,7 @@ cd sruthi-deploy
 git init
 git add .
 git commit -m "Sruthi prototype"
-gh repo create sruthi --private --source=. --push
+gh repo create Sruthi --private --source=. --push
 ```
 
 Then at https://vercel.com/new, import the repo. Every future `git push`
@@ -105,3 +105,16 @@ would both read well.
 | Hold duration | `HOLD_MINUTES` |
 | Colours | `:root { ... }` at the top of `<style>` |
 | Backend swap point | the four `Store` methods — see the comment above them |
+| Organiser WhatsApp number | `ORGANISER_WA` — the sign-up form and songs notify both send here |
+
+## The teacher sign-up form
+
+"List yourself" opens a real form. With no backend it does the two useful things
+it can: sends the organiser a fully-formed WhatsApp message with the teacher's
+details and weekly timings, and copies a JSON object shaped exactly like a
+`TEACHERS` entry so you can paste it straight into the data block.
+
+Set `ORGANISER_WA` to your own number before sharing it with anyone.
+
+The three consent checkboxes are not decoration — they are the DPDP consent
+record and the under-18 safeguarding agreement. Keep them.

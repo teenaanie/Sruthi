@@ -266,6 +266,68 @@
   .modal-actions .btn{flex:1;min-width:130px;text-align:center;text-decoration:none;
     display:inline-flex;align-items:center;justify-content:center;gap:7px}
   .note{font-size:12px;color:var(--muted);margin-top:12px}
+
+  /* ---------- sign-up form ---------- */
+  .modal.wide{max-width:700px}
+  .form-intro{color:var(--muted);font-size:13.5px;margin:8px 0 0}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  .form-grid .full{grid-column:1/-1}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  .fld > label{font-size:12px;font-weight:700;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em}
+  .fld .req{color:var(--primary)}
+  .fld .hint{font-size:11.5px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+  .fld.bad input,.fld.bad select,.fld.bad textarea{border-color:#C0472B;background:#FDF4F2}
+  .err{font-size:11.5px;color:#8E2C1B;display:none}
+  .fld.bad .err{display:block}
+  .checks{display:flex;flex-wrap:wrap;gap:7px}
+  .checks label{
+    display:inline-flex;align-items:center;gap:6px;font-size:13px;
+    border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:var(--surface);
+  }
+  .checks label:hover{border-color:var(--primary)}
+  .checks input{accent-color:var(--primary);margin:0}
+  .checks input:checked + span{font-weight:600;color:var(--primary)}
+  .phone-wrap{display:flex;align-items:stretch}
+  .phone-wrap .pfx{
+    display:flex;align-items:center;padding:0 11px;border:1px solid var(--line);border-right:none;
+    border-radius:10px 0 0 10px;background:var(--bg);color:var(--muted);font-size:14px;
+  }
+  .phone-wrap input{border-radius:0 10px 10px 0}
+
+  fieldset.avail-build{
+    border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:18px 0 0;
+  }
+  fieldset.avail-build legend{
+    font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.05em;padding:0 6px;
+  }
+  .bday{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line)}
+  .bday:first-of-type{border-top:none}
+  .bday > b{width:40px;flex:none;font-size:13px;padding-top:7px;color:var(--muted)}
+  .bday-slots{display:flex;flex-wrap:wrap;gap:7px;flex:1}
+  .bslot{display:inline-flex;align-items:center;gap:4px;background:var(--bg);
+    border:1px solid var(--line);border-radius:9px;padding:3px 5px 3px 7px}
+  .bslot select{padding:3px 5px;font-size:12.5px;border:none;background:transparent;width:auto}
+  .bslot .rm{border:none;background:none;color:#8E2C1B;font-size:15px;padding:0 4px;line-height:1}
+  .addslot{
+    border:1px dashed var(--line);background:none;border-radius:9px;padding:5px 11px;
+    font-size:12.5px;color:var(--muted);
+  }
+  .addslot:hover{border-color:var(--primary);color:var(--primary)}
+
+  .consents{margin-top:18px;background:var(--primary-soft);border-radius:12px;padding:14px 16px}
+  .consents h4{margin:0 0 4px;font-size:13px;color:var(--primary)}
+  .consents p.lead{font-size:12px;color:var(--muted);margin:0 0 10px}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:13px;margin-top:9px;cursor:pointer}
+  .consent input{accent-color:var(--primary);margin-top:3px;flex:none}
+  .consent.bad{color:#8E2C1B}
+  .form-error{
+    display:none;background:#FBEAE7;color:#8E2C1B;border-radius:10px;
+    padding:10px 13px;font-size:13px;margin-top:14px;
+  }
+  .form-error.on{display:block}
+  @media (max-width:560px){ .form-grid{grid-template-columns:1fr} }
   .close-x{background:none;border:none;font-size:22px;color:var(--muted);line-height:1;padding:0}
   .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 
@@ -307,7 +369,7 @@
       <a href="#teachers">Teachers</a>
       <a href="#songs">Original songs</a>
     </nav>
-    <button class="btn ghost" onclick="alert('Teacher sign-up form goes here — name, instruments, city, weekly slots, WhatsApp number.')">List yourself</button>
+    <button class="btn ghost" id="open-signup">List yourself</button>
   </div>
 </header>
 
@@ -481,7 +543,8 @@
         <h2>Your own songs, on the same page</h2>
         <p>Coming next: teachers and students upload original compositions — a new kirtan, a film-style melody, a student's first recital — and they play right here as video. Sruthi becomes a place to learn <em>and</em> be heard.</p>
       </div>
-      <button class="btn" onclick="alert('Phase 2: upload or paste a YouTube link, add credits, and it plays inline in this section.')">Tell me when it's live</button>
+      <a class="btn" id="notify-songs" href="#" target="_blank" rel="noopener"
+        style="text-decoration:none;display:inline-flex;align-items:center">Tell me when it's live</a>
     </div>
   </section>
 </main>
@@ -509,6 +572,121 @@
       <button class="btn ghost" id="m-copy">Copy message</button>
     </div>
     <p class="note" id="m-note"></p>
+  </div>
+</div>
+
+<div class="backdrop" id="signup-backdrop" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3 id="signup-title">List yourself as a teacher</h3>
+      <button class="close-x" id="signup-close" aria-label="Close">&times;</button>
+    </div>
+    <p class="form-intro">Fill this in once. It takes about three minutes, and your listing
+      appears with your weekly timings so students can book a slot directly on WhatsApp.</p>
+
+    <form id="signup-form" novalidate>
+      <div class="form-grid">
+        <div class="fld full">
+          <label for="su-name">Your name <span class="req">*</span></label>
+          <input type="text" id="su-name" autocomplete="name" placeholder="e.g. Meenakshi Warrier">
+          <span class="err">Please enter your name.</span>
+        </div>
+
+        <div class="fld">
+          <label for="su-city">Town <span class="req">*</span></label>
+          <input type="text" id="su-city" list="town-list" placeholder="e.g. Thrissur">
+          <datalist id="town-list"></datalist>
+          <span class="err">Which town do you teach in?</span>
+        </div>
+
+        <div class="fld">
+          <label for="su-phone">WhatsApp number <span class="req">*</span></label>
+          <div class="phone-wrap">
+            <span class="pfx">+91</span>
+            <input type="text" id="su-phone" inputmode="numeric" maxlength="10" placeholder="98470 12345">
+          </div>
+          <span class="err">Enter a 10-digit Indian mobile number.</span>
+        </div>
+
+        <div class="fld">
+          <label for="su-exp">Years teaching <span class="req">*</span></label>
+          <input type="text" id="su-exp" inputmode="numeric" maxlength="2" placeholder="e.g. 12">
+          <span class="err">Roughly how many years?</span>
+        </div>
+
+        <div class="fld">
+          <label for="su-fee">Fee per hour <span class="req">*</span></label>
+          <input type="text" id="su-fee" inputmode="numeric" maxlength="5" placeholder="e.g. 600">
+          <span class="err">What do you charge per hour?</span>
+        </div>
+
+        <div class="fld full">
+          <label>What do you teach? <span class="req">*</span></label>
+          <div class="checks" id="su-instruments"></div>
+          <span class="err">Pick at least one.</span>
+        </div>
+
+        <div class="fld full">
+          <label for="su-other">Something not listed?</label>
+          <input type="text" id="su-other" placeholder="e.g. Chenda, Ghatam, Sitar">
+        </div>
+
+        <div class="fld full">
+          <label>How do you teach? <span class="req">*</span></label>
+          <div class="checks" id="su-modes"></div>
+          <span class="err">Pick at least one.</span>
+        </div>
+
+        <div class="fld full">
+          <label>Languages you teach in <span class="req">*</span></label>
+          <div class="checks" id="su-langs"></div>
+          <span class="err">Pick at least one.</span>
+        </div>
+
+        <div class="fld full">
+          <label for="su-bio">A line or two about your teaching
+            <span class="hint">— what a new student can expect</span></label>
+          <textarea id="su-bio" maxlength="220" style="min-height:74px"
+            placeholder="e.g. Trained in the Semmangudi bani. Beginners from swaras up to varnams."></textarea>
+        </div>
+      </div>
+
+      <fieldset class="avail-build">
+        <legend>Your weekly timings (IST) <span class="req">*</span></legend>
+        <div id="avail-builder"></div>
+        <p class="note" style="margin-top:10px">Add the bands you are usually free. You confirm each
+          booking on WhatsApp before it is fixed, so this is a guide, not a commitment.</p>
+      </fieldset>
+
+      <div class="consents">
+        <h4>Before you submit</h4>
+        <p class="lead">These aren't box-ticking — they're what keeps students and teachers safe.</p>
+        <label class="consent" id="c1-wrap">
+          <input type="checkbox" id="su-c1">
+          <span>I agree that my <b>name, town and WhatsApp number</b> will be shown publicly on Sruthi,
+            and I can ask for them to be removed at any time.</span>
+        </label>
+        <label class="consent" id="c2-wrap">
+          <input type="checkbox" id="su-c2">
+          <span>For students <b>under 18</b>, I will arrange lessons through a parent or guardian and
+            keep them included in the conversation.</span>
+        </label>
+        <label class="consent" id="c3-wrap">
+          <input type="checkbox" id="su-c3">
+          <span>I will <b>confirm my timings weekly</b> when Sruthi asks, so students aren't booking
+            slots I no longer have.</span>
+        </label>
+      </div>
+
+      <div class="form-error" id="su-error"></div>
+
+      <div class="modal-actions">
+        <button type="submit" class="btn wa">Send my listing on WhatsApp</button>
+        <button type="button" class="btn ghost" id="su-json">Copy listing data</button>
+      </div>
+      <p class="note">Sends to the Sruthi organiser, who adds you to the site. Nothing is published
+        until you're contacted and confirmed. (Demo number — this won't reach anyone.)</p>
+    </form>
   </div>
 </div>
 
@@ -1085,6 +1263,215 @@ function suggestTimes(){
 }
 
 /* ============================================================
+   TEACHER SIGN-UP FORM
+   ------------------------------------------------------------
+   No backend, so submission does the two useful things it can without one:
+   sends the organiser a fully-formed WhatsApp message, and copies a JSON
+   object shaped exactly like a TEACHERS entry so it can be pasted into the
+   data block. Swap both for a POST when the backend exists.
+   ============================================================ */
+const ORGANISER_WA = "919999900000";   // placeholder — put the real organiser number here
+const MODES = ["Online","At teacher's place","At your home"];
+const LANGS = ["Malayalam","English","Tamil","Hindi","Kannada"];
+const TIMES = (() => {
+  const out = [];
+  for (let h = 5; h <= 22; h++) for (const m of ["00","30"]) out.push(`${String(h).padStart(2,"0")}:${m}`);
+  return out;
+})();
+
+function checkList(el, items, name){
+  el.innerHTML = items.map((i,n) =>
+    `<label><input type="checkbox" name="${name}" value="${i}" id="${name}${n}"><span>${i}</span></label>`
+  ).join("");
+}
+const checkedIn = el => [...el.querySelectorAll("input:checked")].map(i => i.value);
+
+function timeOptions(sel){
+  return TIMES.map(t => `<option value="${t}"${t===sel?" selected":""}>${to12(t)}</option>`).join("");
+}
+
+function buildAvailability(){
+  $("#avail-builder").innerHTML = DAYS.map(d => `
+    <div class="bday" data-day="${d}">
+      <b>${d}</b>
+      <div class="bday-slots">
+        <button type="button" class="addslot" data-add="${d}">+ Add time</button>
+      </div>
+    </div>`).join("");
+}
+
+function addSlotRow(day){
+  const row = document.querySelector(`.bday[data-day="${day}"] .bday-slots`);
+  const el = document.createElement("span");
+  el.className = "bslot";
+  el.innerHTML = `<select class="s-from">${timeOptions("17:00")}</select>
+    <span style="color:var(--muted);font-size:12px">to</span>
+    <select class="s-to">${timeOptions("18:30")}</select>
+    <button type="button" class="rm" aria-label="Remove this time">&times;</button>`;
+  row.insertBefore(el, row.querySelector(".addslot"));
+}
+
+function collectAvailability(){
+  const slots = {}; let count = 0; const reversed = [];
+  DAYS.forEach(d => {
+    slots[d] = [];
+    document.querySelectorAll(`.bday[data-day="${d}"] .bslot`).forEach(b => {
+      const f = b.querySelector(".s-from").value, t = b.querySelector(".s-to").value;
+      // Never drop a backwards range quietly — the teacher meant to add a slot,
+      // and silently losing it is how wrong timings reach the site.
+      const bad = f >= t;
+      b.style.borderColor = bad ? "#C0472B" : "";
+      b.style.background  = bad ? "#FDF4F2" : "";
+      if (bad){ reversed.push(`${d} ${to12(f)}–${to12(t)}`); return; }
+      slots[d].push([f,t]);
+      count++;
+    });
+  });
+  return { slots, count, reversed };
+}
+
+function markBad(id, bad){
+  const f = document.getElementById(id).closest(".fld");
+  if (f) f.classList.toggle("bad", bad);
+  return !bad;
+}
+
+function collectSignup(){
+  const v = id => (document.getElementById(id).value || "").trim();
+  const instruments = checkedIn($("#su-instruments"));
+  const extra = v("su-other");
+  if (extra) extra.split(",").map(x => x.trim()).filter(Boolean).forEach(x => instruments.push(x));
+  const modes = checkedIn($("#su-modes"));
+  const langs = checkedIn($("#su-langs"));
+  const { slots, count, reversed } = collectAvailability();
+  const phone = v("su-phone").replace(/\D/g,"");
+
+  const problems = [];
+  if (!markBad("su-name",  !v("su-name")))                   problems.push("your name");
+  if (!markBad("su-city",  !v("su-city")))                   problems.push("your town");
+  if (!markBad("su-phone", !/^[6-9]\d{9}$/.test(phone)))     problems.push("a valid 10-digit mobile number");
+  if (!markBad("su-exp",   !/^\d{1,2}$/.test(v("su-exp"))))  problems.push("years teaching");
+  if (!markBad("su-fee",   !/^\d{2,5}$/.test(v("su-fee"))))  problems.push("your hourly fee");
+  if (!markBad("su-other", false)) {}
+  $("#su-instruments").closest(".fld").classList.toggle("bad", !instruments.length);
+  if (!instruments.length) problems.push("what you teach");
+  $("#su-modes").closest(".fld").classList.toggle("bad", !modes.length);
+  if (!modes.length) problems.push("how you teach");
+  $("#su-langs").closest(".fld").classList.toggle("bad", !langs.length);
+  if (!langs.length) problems.push("your languages");
+  if (!count && !reversed.length) problems.push("at least one weekly time");
+
+  const consents = ["su-c1","su-c2","su-c3"].map(id => document.getElementById(id).checked);
+  ["c1-wrap","c2-wrap","c3-wrap"].forEach((w,i) =>
+    document.getElementById(w).classList.toggle("bad", !consents[i]));
+  const consentsOk = consents.every(Boolean);
+
+  return {
+    ok: !problems.length && consentsOk && !reversed.length,
+    problems, consentsOk, reversed,
+    data: {
+      name:v("su-name"), city:v("su-city"), phone:"91"+phone,
+      exp:Number(v("su-exp")), fee:`₹${v("su-fee")} / hr`,
+      instruments, modes, languages:langs, bio:v("su-bio"), slots
+    }
+  };
+}
+
+function signupMessage(d){
+  const timings = DAYS.filter(day => d.slots[day].length)
+    .map(day => `  ${day}: ${d.slots[day].map(([f,t]) => slotLabel(f,t)).join(", ")}`)
+    .join("\n");
+  return `Namaskaram! I'd like to be listed on Sruthi as a music teacher.\n\n`
+    + `Name: ${d.name}\n`
+    + `Town: ${d.city}\n`
+    + `Teaches: ${d.instruments.join(", ")}\n`
+    + `Format: ${d.modes.join(", ")}\n`
+    + `Languages: ${d.languages.join(", ")}\n`
+    + `Experience: ${d.exp} years\n`
+    + `Fee: ${d.fee}\n`
+    + (d.bio ? `About: ${d.bio}\n` : "")
+    + `\nWeekly timings (IST):\n${timings}\n`
+    + `\nI have agreed to the public listing, under-18 and weekly-confirmation terms.`;
+}
+
+function teacherJSON(d){
+  const id = "t" + (TEACHERS.length + 1);
+  return JSON.stringify({
+    id, name:d.name, city:d.city, instruments:d.instruments, modes:d.modes,
+    languages:d.languages, exp:d.exp, fee:d.fee, phone:d.phone, bio:d.bio,
+    color:"#7A1F2B", slots:d.slots, booked:[]
+  }, null, 2);
+}
+
+function openSignup(){
+  $("#signup-backdrop").classList.add("on");
+  $("#su-name").focus();
+}
+function closeSignup(){ $("#signup-backdrop").classList.remove("on"); }
+
+function initSignup(){
+  $("#town-list").innerHTML = ALL_CITIES.map(c => `<option value="${c}">`).join("");
+  checkList($("#su-instruments"), ALL_INSTRUMENTS, "inst");
+  checkList($("#su-modes"), MODES, "mode");
+  checkList($("#su-langs"), LANGS, "lang");
+  buildAvailability();
+
+  $("#avail-builder").addEventListener("click", e => {
+    const add = e.target.closest("[data-add]");
+    if (add){ addSlotRow(add.dataset.add); return; }
+    const rm = e.target.closest(".rm");
+    if (rm) rm.closest(".bslot").remove();
+  });
+
+  $("#su-phone").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g,"").slice(0,10);
+  });
+
+  $("#open-signup").onclick = openSignup;
+  $("#signup-close").onclick = closeSignup;
+  $("#signup-backdrop").addEventListener("click", e => {
+    if (e.target === $("#signup-backdrop")) closeSignup();
+  });
+
+  $("#signup-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const r = collectSignup();
+    const box = $("#su-error");
+    if (!r.ok){
+      const bits = [];
+      if (r.problems.length) bits.push(`We still need ${r.problems.join(", ")}.`);
+      if (r.reversed.length)
+        bits.push(`These times end before they start: ${r.reversed.join("; ")}.`);
+      if (!r.consentsOk) bits.push("Please tick all three agreements — they're required.");
+      box.textContent = bits.join(" ");
+      box.classList.add("on");
+      const firstBad = document.querySelector(".fld.bad, .consent.bad");
+      if (firstBad) firstBad.scrollIntoView({ block:"center", behavior:"smooth" });
+      return;
+    }
+    box.classList.remove("on");
+    window.open(`https://wa.me/${ORGANISER_WA}?text=${encodeURIComponent(signupMessage(r.data))}`,
+                "_blank", "noopener");
+    toast("Listing sent — the organiser will confirm on WhatsApp");
+  });
+
+  $("#su-json").onclick = async () => {
+    const r = collectSignup();
+    if (!r.ok){
+      $("#su-error").textContent = "Fill the form in first — then this copies a data block ready to paste.";
+      $("#su-error").classList.add("on");
+      return;
+    }
+    try { await navigator.clipboard.writeText(teacherJSON(r.data)); toast("Listing data copied"); }
+    catch { toast("Copy failed — take a screenshot instead"); }
+  };
+
+  // songs teaser: a real WhatsApp notify rather than a dead button
+  $("#notify-songs").href = `https://wa.me/${ORGANISER_WA}?text=` +
+    encodeURIComponent("Namaskaram! Please tell me when the original songs section on Sruthi goes live — I'd like to share my own recordings.");
+}
+
+/* ============================================================
    WIRING
    ============================================================ */
 function fillSelect(sel, items, anyLabel){
@@ -1167,7 +1554,10 @@ function init(){
 
   $("#modal-close").onclick = closeModal;
   $("#backdrop").addEventListener("click", e => { if (e.target === $("#backdrop")) closeModal(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if ($("#signup-backdrop").classList.contains("on")) closeSignup(); else closeModal();
+  });
   document.addEventListener("keydown", trapFocus);
   $("#m-name").oninput = refreshMessage;
   $("#m-msg").oninput = syncLink;
@@ -1176,6 +1566,7 @@ function init(){
     catch { $("#m-msg").select(); toast("Press Ctrl/Cmd+C to copy"); }
   };
 
+  initSignup();
   render();
   suggestTimes();
   renderHolds();
