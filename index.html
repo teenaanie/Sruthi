@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sruthi — Kerala's Music Circle</title>
+<style>
+  :root{
+    /* Kerala festival — kasavu ivory, temple maroon, kasavu gold */
+    --bg:#FDFBF6;
+    --surface:#FFFFFF;
+    --ink:#241214;
+    --muted:#6E5457;
+    --line:#E9DFD1;
+    --primary:#7A1F2B;
+    --primary-soft:#F8EBEA;
+    --accent:#C6902A;          /* decorative only — too light for text */
+    --accent-ink:#7A5205;      /* gold that passes contrast on ivory */
+    --accent-soft:#FAF1DC;
+    --dark:#2B1416;            /* aged rosewood */
+    --wa:#1B7A4B;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(43,20,22,.06), 0 8px 24px rgba(43,20,22,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;font-weight:600;letter-spacing:-.01em;margin:0}
+  a{color:inherit}
+  button{font:inherit;cursor:pointer}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+  /* ---------- demo banner ---------- */
+  .demo-banner{
+    background:var(--dark);color:#F3E6D2;font-size:13px;padding:8px 20px;text-align:center;
+    border-bottom:2px solid var(--accent);
+  }
+  .demo-banner strong{font-weight:700}
+
+  /* ---------- header ---------- */
+  header.site{
+    background:var(--surface);border-bottom:1px solid var(--line);
+    box-shadow:0 2px 0 rgba(198,144,42,.28);
+    position:sticky;top:0;z-index:40;
+  }
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand-mark{
+    width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;
+    display:grid;place-items:center;font-family:Georgia,serif;font-size:20px;flex:none;
+  }
+  .brand-name{font-family:Georgia,serif;font-size:19px;line-height:1.1}
+  .brand-sub{font-size:11.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+  .nav{display:flex;gap:6px;align-items:center}
+  .nav a{
+    text-decoration:none;font-size:14px;color:var(--muted);padding:7px 11px;border-radius:8px;
+  }
+  .nav a:hover{background:var(--primary-soft);color:var(--primary)}
+  .btn{
+    border:1px solid transparent;border-radius:10px;padding:9px 15px;font-size:14px;font-weight:600;
+    background:var(--primary);color:#fff;
+  }
+  .btn:hover{background:#5E1721}
+  .btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn.ghost:hover{background:var(--primary-soft);border-color:var(--primary-soft)}
+  .btn.wa{background:var(--wa)}
+  .btn.wa:hover{background:#15633c}
+
+  /* ---------- hero ---------- */
+  .hero-band{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero-art{
+    position:absolute;right:-8px;bottom:-6px;width:min(54%,640px);
+    pointer-events:none;user-select:none;opacity:.9;
+  }
+  .hero-art svg{display:block;width:100%;height:auto}
+  .hero{padding:56px 0 46px;position:relative;z-index:1}
+  .hero h1{font-size:clamp(28px,4.4vw,42px);line-height:1.12;max-width:22ch}
+  .hero p.lede{color:var(--muted);font-size:16.5px;max-width:46ch;margin:14px 0 0}
+  .hero-stats{display:flex;gap:26px;margin-top:22px;flex-wrap:wrap}
+  .stat b{display:block;font-family:Georgia,serif;font-size:23px;color:var(--primary)}
+  .stat span{font-size:12.5px;color:var(--muted)}
+
+  .kasavu{height:14px;background:
+      linear-gradient(var(--accent),var(--accent)) 0 0/100% 2px no-repeat,
+      linear-gradient(var(--accent),var(--accent)) 0 100%/100% 2px no-repeat,
+      repeating-linear-gradient(90deg,transparent 0 26px,rgba(198,144,42,.5) 26px 30px);
+    opacity:.55}
+
+  /* ---------- suggest panel ---------- */
+  .suggest{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;margin:26px 0 8px;box-shadow:var(--shadow);
+  }
+  .suggest h2{font-size:19px;display:inline-block;padding-bottom:6px;
+    border-bottom:2px solid var(--accent)}
+  .suggest .sub{color:var(--muted);font-size:13.5px;margin:4px 0 16px}
+  .suggest-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .field{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1 1 150px}
+  .field label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  select,input[type=text],textarea{
+    font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:10px;
+    background:var(--surface);color:var(--ink);width:100%;
+  }
+  select:focus,input:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .suggest-out{margin-top:16px;display:none}
+  .suggest-out.on{display:block}
+  .slot-rec{
+    display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;background:var(--bg);
+  }
+  .slot-rec .when{font-weight:600}
+  .slot-rec .who{font-size:13px;color:var(--muted)}
+  .rank{
+    width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);
+    display:grid;place-items:center;font-size:13px;font-weight:700;flex:none;
+  }
+
+  /* ---------- filters ---------- */
+  .filters{padding:22px 0 6px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{
+    border:1px solid var(--line);background:var(--surface);border-radius:999px;
+    padding:7px 14px;font-size:13.5px;color:var(--ink);
+  }
+  .chip:hover{border-color:var(--primary)}
+  .chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+  .filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .result-count{margin:16px 0 4px;font-size:13.5px;color:var(--muted)}
+
+  /* ---------- teacher cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;padding-bottom:12px}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:3px;
+    background:repeating-linear-gradient(90deg,var(--accent) 0 14px,rgba(198,144,42,.32) 14px 20px);
+  }
+  .card-top{display:flex;gap:13px;align-items:flex-start}
+  .avatar{
+    width:52px;height:52px;border-radius:12px;flex:none;display:grid;place-items:center;
+    font-family:Georgia,serif;font-size:19px;color:#fff;
+  }
+  .card h3{font-size:17px;line-height:1.2}
+  .meta{font-size:13px;color:var(--muted);margin-top:3px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
+  .tag{
+    font-size:12px;padding:3px 9px;border-radius:999px;background:var(--primary-soft);color:var(--primary);
+    font-weight:600;
+  }
+  .tag.mode{background:var(--accent-soft);color:var(--accent-ink)}
+  .card-facts{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;font-size:13px}
+  .card-facts div span{display:block;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+  .card-facts div b{font-weight:600}
+  .bio{font-size:13.5px;color:var(--muted);margin-top:12px}
+
+  .avail{margin-top:14px;border-top:1px dashed var(--line);padding-top:13px}
+  .avail-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .avail-head h4{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+  .avail-head .ist{font-size:11.5px;color:var(--muted)}
+  .day-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px}
+  .day-name{
+    width:38px;flex:none;font-size:12px;font-weight:700;color:var(--muted);padding-top:5px;
+  }
+  .day-slots{display:flex;gap:6px;flex-wrap:wrap}
+  .slot{
+    border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:4px 9px;
+    font-size:12.5px;font-variant-numeric:tabular-nums;
+  }
+  .slot:hover{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+  .slot.full{opacity:.4;text-decoration:line-through;cursor:not-allowed}
+  .slot.full:hover{border-color:var(--line);background:var(--bg);color:var(--ink)}
+  .slot.held{
+    border-color:#D9A441;background:var(--accent-soft);color:var(--accent-ink);
+    cursor:not-allowed;font-weight:600;
+  }
+  .slot.held:hover{border-color:#D9A441;background:var(--accent-soft);color:var(--accent-ink)}
+  .slot.held .hold-left{font-size:11px;opacity:.85;font-weight:500}
+  .slot.unconfirmed{border-style:dashed;opacity:.8}
+
+  /* freshness */
+  .fresh{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;
+    padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .fresh .dot{width:7px;height:7px;border-radius:50%;flex:none}
+  .fresh.ok{background:#E7F3EA;color:#1B5E36}
+  .fresh.ok .dot{background:#2E8B57}
+  .fresh.warn{background:var(--accent-soft);color:var(--accent-ink)}
+  .fresh.warn .dot{background:#D9A441}
+  .fresh.stale{background:#FBEAE7;color:#8E2C1B}
+  .fresh.stale .dot{background:#C0472B}
+  .card.is-stale{opacity:.94}
+  .card.is-stale::before{background:repeating-linear-gradient(90deg,#C0472B 0 14px,rgba(192,71,43,.3) 14px 20px)}
+  .stale-note{
+    margin-top:10px;font-size:12.5px;background:#FBEAE7;color:#8E2C1B;
+    border-radius:9px;padding:8px 11px;
+  }
+
+  /* holds demo panel */
+  .holds{
+    position:fixed;left:18px;bottom:18px;z-index:70;background:var(--surface);
+    border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;
+    padding:13px 15px;box-shadow:0 10px 34px rgba(43,20,22,.18);max-width:330px;display:none;
+  }
+  .holds.on{display:block}
+  .holds h5{margin:0 0 8px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .hold-row{font-size:13px;padding:7px 0;border-top:1px solid var(--line)}
+  .hold-row:first-of-type{border-top:none}
+  .hold-row .ref{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:var(--accent-ink)}
+  .hold-row .acts{display:flex;gap:6px;margin-top:5px}
+  .hold-row .acts button{
+    font-size:11.5px;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:var(--bg);
+  }
+  .hold-row .acts button.yes{background:var(--wa);color:#fff;border-color:transparent}
+  .holds .why{font-size:11px;color:var(--muted);margin:9px 0 0;line-height:1.4}
+  .no-slots{font-size:12.5px;color:var(--muted);font-style:italic}
+  .card-actions{display:flex;gap:8px;margin-top:15px}
+  .card-actions .btn{flex:1;text-align:center}
+
+  .empty{
+    text-align:center;padding:50px 20px;color:var(--muted);
+    border:1px dashed var(--line);border-radius:var(--radius);
+  }
+
+  /* ---------- songs teaser ---------- */
+  .songs{
+    margin:34px 0 10px;background:var(--dark);color:#fff;border-radius:var(--radius);
+    border:1px solid rgba(198,144,42,.45);
+    padding:28px;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  }
+  .songs h2{font-size:22px;color:#fff}
+  .songs h2{color:#F7EEDC}
+  .songs p{color:#D9C6AE;max-width:52ch;margin:8px 0 0;font-size:14.5px}
+  .songs .btn{background:var(--accent);color:#2B1416}
+  .songs .btn:hover{background:#dda637}
+
+  footer.site{background:var(--dark);border-top:3px solid var(--accent);margin-top:36px;
+    padding:30px 0 44px;color:#C4AE9A;font-size:13px}
+  footer.site strong{color:#F7EEDC}
+  footer.site a{color:var(--accent)}
+
+  /* ---------- modal ---------- */
+  .backdrop{
+    position:fixed;inset:0;background:rgba(22,33,30,.5);display:none;
+    align-items:center;justify-content:center;padding:20px;z-index:60;
+  }
+  .backdrop.on{display:flex}
+  .modal{
+    background:var(--surface);border-radius:16px;max-width:520px;width:100%;
+    padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.25);max-height:90vh;overflow:auto;
+  }
+  .modal h3{font-size:20px}
+  .modal .booking-summary{
+    background:var(--primary-soft);border-radius:12px;padding:13px 15px;margin:14px 0;font-size:14px;
+  }
+  .modal .booking-summary b{color:var(--primary)}
+  .modal label.blk{display:block;font-size:12px;font-weight:700;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px}
+  .modal textarea{min-height:132px;resize:vertical;font-size:13.5px;line-height:1.5}
+  .modal-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .modal-actions .btn{flex:1;min-width:130px;text-align:center;text-decoration:none;
+    display:inline-flex;align-items:center;justify-content:center;gap:7px}
+  .note{font-size:12px;color:var(--muted);margin-top:12px}
+  .close-x{background:none;border:none;font-size:22px;color:var(--muted);line-height:1;padding:0}
+  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;
+    transition:transform .25s ease;z-index:80;
+  }
+  .toast.on{transform:translateX(-50%) translateY(0)}
+
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  @media (max-width:640px){
+    .header-inner{flex-wrap:wrap}
+    .nav{width:100%;order:3;overflow-x:auto}
+    .grid{grid-template-columns:1fr}
+    .songs{padding:22px}
+    .holds{left:10px;right:10px;bottom:10px;max-width:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-banner">
+  <strong>Demo preview.</strong> Teachers and phone numbers below are sample data — replace before sharing publicly.
+</div>
+
+<header class="site">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <div class="brand-mark">സ</div>
+      <div>
+        <div class="brand-name">Sruthi</div>
+        <div class="brand-sub">Kerala's Music Circle</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="#find">Find a time</a>
+      <a href="#teachers">Teachers</a>
+      <a href="#songs">Original songs</a>
+    </nav>
+    <button class="btn ghost" onclick="alert('Teacher sign-up form goes here — name, instruments, city, weekly slots, WhatsApp number.')">List yourself</button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero-band">
+    <div class="hero-art" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500">
+        <defs>
+          <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#C6902A" stop-opacity=".24"/>
+            <stop offset="100%" stop-color="#C6902A" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <circle cx="470" cy="150" r="132" fill="url(#glow)"/>
+        <circle cx="470" cy="150" r="132" fill="none" stroke="#C6902A" stroke-opacity=".26"/>
+        <circle cx="470" cy="150" r="96" fill="none" stroke="#C6902A" stroke-opacity=".16"/>
+        <g stroke="#7A1F2B" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <!-- veena -->
+          <ellipse cx="292" cy="378" rx="112" ry="98" fill="#7A1F2B" fill-opacity=".07"/>
+          <ellipse cx="292" cy="378" rx="112" ry="98"/>
+          <ellipse cx="292" cy="378" rx="87" ry="75" stroke-opacity=".34"/>
+          <circle cx="256" cy="340" r="20" stroke-opacity=".5"/>
+          <circle cx="256" cy="340" r="12" stroke-opacity=".28"/>
+          <g transform="translate(330,348) rotate(-41)">
+            <path d="M-66 -13 h13 v26 h-13 z" fill="#7A1F2B" fill-opacity=".18"/>
+            <path d="M0 -17 H280 a10 10 0 0 1 10 10 v14 a10 10 0 0 1 -10 10 H0 z" fill="#7A1F2B" fill-opacity=".06"/>
+            <g stroke-opacity=".42" stroke-width="1.7">
+              <path d="M26 -17 v34"/><path d="M50 -17 v34"/><path d="M74 -17 v34"/>
+              <path d="M98 -17 v34"/><path d="M122 -17 v34"/><path d="M146 -17 v34"/>
+              <path d="M168 -17 v34"/><path d="M190 -17 v34"/><path d="M210 -17 v34"/>
+              <path d="M230 -17 v34"/>
+            </g>
+            <g stroke-opacity=".62" stroke-width="1.2">
+              <path d="M-58 -9 H274"/><path d="M-58 -3 H274"/>
+              <path d="M-58 3 H274"/><path d="M-58 9 H274"/>
+            </g>
+            <g stroke-width="2.2">
+              <path d="M236 -17 v-16"/><path d="M258 -17 v-16"/>
+              <path d="M236 17 v16"/><path d="M258 17 v16"/>
+            </g>
+            <ellipse cx="314" cy="34" rx="43" ry="36" fill="#7A1F2B" fill-opacity=".07"/>
+            <path d="M290 -12 c26 -6 46 -16 52 -34 c4 -13 -6 -24 -18 -21 c-11 3 -13 16 -4 21 c7 4 14 -1 14 -8"/>
+          </g>
+          <!-- mridangam -->
+          <g transform="translate(18,452) scale(.82)">
+            <path d="M14 -34 C64 -50 128 -44 168 -26 L168 26 C128 44 64 50 14 34 Z" fill="#7A1F2B" fill-opacity=".07"/>
+            <ellipse cx="14" cy="0" rx="16" ry="34"/>
+            <ellipse cx="168" cy="0" rx="13" ry="26"/>
+            <ellipse cx="14" cy="0" rx="9" ry="20" stroke-opacity=".38"/>
+            <g stroke-opacity=".38" stroke-width="1.6">
+              <path d="M30 -37 L154 -28"/><path d="M30 -22 L154 -16"/>
+              <path d="M30 22 L154 16"/><path d="M30 37 L154 28"/>
+              <path d="M48 -40 L44 41"/><path d="M76 -43 L72 45"/>
+              <path d="M104 -43 L102 45"/><path d="M132 -40 L130 41"/>
+            </g>
+          </g>
+          <!-- flute -->
+          <g transform="translate(34,208) rotate(-16)">
+            <path d="M0 -9 H272 a9 9 0 0 1 0 18 H0 a9 9 0 0 1 0 -18 z" fill="#7A1F2B" fill-opacity=".06"/>
+            <g stroke-opacity=".52" stroke-width="2">
+              <circle cx="26" cy="0" r="5.4"/>
+              <circle cx="64" cy="0" r="4.5"/><circle cx="94" cy="0" r="4.5"/>
+              <circle cx="124" cy="0" r="4.5"/><circle cx="160" cy="0" r="4.5"/>
+              <circle cx="190" cy="0" r="4.5"/><circle cx="220" cy="0" r="4.5"/>
+            </g>
+          </g>
+        </g>
+        <g stroke="#C6902A" fill="none" stroke-width="2.1" stroke-linecap="round" stroke-opacity=".6">
+          <path d="M448 300 q26 -30 52 0 t52 0 t52 0"/>
+          <path d="M430 336 q30 -38 60 0 t60 0" stroke-opacity=".42"/>
+          <path d="M466 266 q20 -22 40 0 t40 0" stroke-opacity=".3"/>
+        </g>
+      </svg>
+    </div>
+    <section class="wrap hero">
+      <h1>Find a music teacher near you, book on WhatsApp.</h1>
+      <p class="lede">Carnatic vocal, kirtan, guitar, violin, veena, mridangam and more — from teachers across Kerala.
+        See exactly when they're free, tap a slot, and a message is written for you.</p>
+      <div class="hero-stats">
+        <div class="stat"><b id="stat-teachers">—</b><span>Teachers listed</span></div>
+        <div class="stat"><b id="stat-slots">—</b><span>Open slots this week</span></div>
+        <div class="stat"><b id="stat-cities">—</b><span>Timings confirmed recently</span></div>
+      </div>
+    </section>
+  </div>
+  <div class="kasavu"></div>
+
+  <section class="wrap" id="find">
+    <div class="suggest">
+      <h2>Suggest a good time</h2>
+      <p class="sub">Tell us what you want to learn and when you're usually free. We'll rank the slots that most teachers can actually take.</p>
+      <div class="suggest-row">
+        <div class="field">
+          <label for="s-instrument">I want to learn</label>
+          <select id="s-instrument"></select>
+        </div>
+        <div class="field">
+          <label for="s-when">I'm usually free</label>
+          <select id="s-when">
+            <option value="any">Any time</option>
+            <option value="early">Early morning (6–9 am)</option>
+            <option value="day">Daytime (9 am–4 pm)</option>
+            <option value="evening" selected>Evening (4–9 pm)</option>
+            <option value="weekend">Weekends only</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-city">Near</label>
+          <select id="s-city"></select>
+        </div>
+        <div class="field" style="flex:0 0 auto;min-width:auto">
+          <button class="btn" id="s-go">Suggest times</button>
+        </div>
+      </div>
+      <div class="suggest-out" id="s-out"></div>
+    </div>
+  </section>
+
+  <section class="wrap filters" id="teachers">
+    <div class="chips" id="instrument-chips" role="group" aria-label="Filter by instrument"></div>
+    <div class="filter-row">
+      <div class="field">
+        <label for="f-search">Search</label>
+        <input type="text" id="f-search" placeholder="Name, style, town…">
+      </div>
+      <div class="field">
+        <label for="f-city">Town</label>
+        <select id="f-city"></select>
+      </div>
+      <div class="field">
+        <label for="f-mode">Format</label>
+        <select id="f-mode">
+          <option value="">Any format</option>
+          <option value="Online">Online</option>
+          <option value="At teacher's place">At teacher's place</option>
+          <option value="At your home">At your home</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-day">Free on</label>
+        <select id="f-day">
+          <option value="">Any day</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-lang">Language</label>
+        <select id="f-lang"></select>
+      </div>
+      <div class="field" style="flex:0 0 auto;min-width:auto">
+        <label for="f-fresh">Timings</label>
+        <select id="f-fresh">
+          <option value="">All teachers</option>
+          <option value="1">Recently confirmed only</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 auto;min-width:auto">
+        <button class="btn ghost" id="f-clear">Clear</button>
+      </div>
+    </div>
+    <p class="result-count" id="result-count"></p>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">
+      No teachers match that combination yet. Try clearing a filter — or
+      <a href="#" onclick="clearFilters();return false;">start over</a>.
+    </div>
+  </section>
+
+  <section class="wrap" id="songs">
+    <div class="songs">
+      <div>
+        <h2>Your own songs, on the same page</h2>
+        <p>Coming next: teachers and students upload original compositions — a new kirtan, a film-style melody, a student's first recital — and they play right here as video. Sruthi becomes a place to learn <em>and</em> be heard.</p>
+      </div>
+      <button class="btn" onclick="alert('Phase 2: upload or paste a YouTube link, add credits, and it plays inline in this section.')">Tell me when it's live</button>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p><strong>Sruthi</strong> — a directory for Kerala's music teachers and learners. All timings shown in IST.</p>
+    <p>Prototype build. Teacher listings are sample data. <a href="#top">Back to top</a></p>
+  </div>
+</footer>
+
+<div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Message this teacher</h3>
+      <button class="close-x" id="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="booking-summary" id="booking-summary"></div>
+    <label class="blk" for="m-name">Your name</label>
+    <input type="text" id="m-name" placeholder="e.g. Teena">
+    <label class="blk" for="m-msg">Message (edit freely)</label>
+    <textarea id="m-msg"></textarea>
+    <div class="modal-actions">
+      <a class="btn wa" id="m-send" href="#" target="_blank" rel="noopener">Open in WhatsApp</a>
+      <button class="btn ghost" id="m-copy">Copy message</button>
+    </div>
+    <p class="note" id="m-note"></p>
+  </div>
+</div>
+
+<div class="holds" id="holds">
+  <h5>Slots you're holding</h5>
+  <div id="holds-list"></div>
+  <p class="why">A hold lasts 30 minutes while the teacher replies, so nobody else can grab the same slot.
+    Buttons above stand in for the teacher's reply in this demo.</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATA — replace this block with real teachers before launch.
+   Numbers are deliberate placeholders (99999 0xxxx), not live lines.
+   ============================================================ */
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+const TEACHERS = [
+  {
+    id:"t1", name:"Meenakshi Warrier", city:"Thrissur",
+    instruments:["Carnatic Vocal","Kirtan & Bhajan"],
+    modes:["At teacher's place","Online"],
+    languages:["Malayalam","English"],
+    exp:18, fee:"₹600 / hr", phone:"919999900001",
+    bio:"Trained in the Semmangudi bani. Takes beginners from swaras up to varnams, and a Saturday bhajan circle.",
+    color:"#7A1F2B",
+    slots:{Mon:[["06:30","08:00"],["17:00","18:30"]],Tue:[["17:00","18:30"]],Wed:[["06:30","08:00"],["17:00","18:30"]],Thu:[],Fri:[["17:00","19:00"]],Sat:[["08:00","10:00"],["16:00","18:00"]],Sun:[["08:00","10:00"]]},
+    booked:["Wed 17:00","Sat 08:00"]
+  },
+  {
+    id:"t2", name:"Vishnu Prasad", city:"Kochi",
+    instruments:["Guitar"],
+    modes:["Online","At your home","At teacher's place"],
+    languages:["Malayalam","English","Tamil"],
+    exp:9, fee:"₹700 / hr", phone:"919999900002",
+    bio:"Acoustic and electric. Chords-in-four-weeks track for adults, plus Trinity grade prep for school students.",
+    color:"#8A5A16",
+    slots:{Mon:[["18:00","19:00"],["19:00","20:00"]],Tue:[["18:00","19:00"],["19:00","20:00"]],Wed:[["18:00","19:00"]],Thu:[["18:00","19:00"],["19:00","20:00"]],Fri:[["18:00","20:00"]],Sat:[["10:00","12:00"],["16:00","19:00"]],Sun:[]},
+    booked:["Mon 18:00","Thu 19:00","Sat 16:00"]
+  },
+  {
+    id:"t3", name:"Sarada Kurup", city:"Thiruvananthapuram",
+    instruments:["Veena"],
+    modes:["At teacher's place"],
+    languages:["Malayalam","English"],
+    exp:26, fee:"₹800 / hr", phone:"919999900003",
+    bio:"Veena from the ground up — instrument sourcing, posture, and the first year of kritis. Limited seats.",
+    color:"#5E2233",
+    slots:{Mon:[["16:00","17:30"]],Tue:[],Wed:[["16:00","17:30"]],Thu:[],Fri:[["16:00","17:30"]],Sat:[["09:00","11:00"]],Sun:[["09:00","11:00"]]},
+    booked:["Fri 16:00"]
+  },
+  {
+    id:"t4", name:"Anwar Sadath", city:"Kozhikode",
+    instruments:["Violin"],
+    modes:["Online","At teacher's place"],
+    languages:["Malayalam","English","Hindi"],
+    exp:14, fee:"₹650 / hr", phone:"919999900004",
+    bio:"Western classical and Carnatic violin. Also coaches wedding and church ensemble players.",
+    color:"#3E2A44",
+    slots:{Mon:[["17:30","19:00"]],Tue:[["17:30","19:00"]],Wed:[],Thu:[["17:30","19:00"]],Fri:[["17:30","19:00"]],Sat:[["07:00","09:00"],["17:00","19:00"]],Sun:[["07:00","09:00"]]},
+    booked:["Tue 17:30"]
+  },
+  {
+    id:"t5", name:"Devika Nambiar", city:"Kannur",
+    instruments:["Kirtan & Bhajan","Carnatic Vocal"],
+    modes:["Online","At your home"],
+    languages:["Malayalam","Hindi","English"],
+    exp:11, fee:"₹450 / hr", phone:"919999900005",
+    bio:"Group kirtan sessions for families and temple groups. Gentle pace, no prior training needed.",
+    color:"#B07B18",
+    slots:{Mon:[],Tue:[["06:00","07:30"]],Wed:[["06:00","07:30"]],Thu:[["06:00","07:30"]],Fri:[["18:30","20:00"]],Sat:[["06:00","08:00"],["18:00","20:00"]],Sun:[["06:00","08:00"],["18:00","20:00"]]},
+    booked:["Sun 18:00"]
+  },
+  {
+    id:"t6", name:"Joseph Mathew", city:"Kottayam",
+    instruments:["Keyboard & Piano"],
+    modes:["At teacher's place","Online"],
+    languages:["Malayalam","English"],
+    exp:21, fee:"₹700 / hr", phone:"919999900006",
+    bio:"Piano theory done properly — sight-reading, chords, and church keyboard for worship teams.",
+    color:"#4A3520",
+    slots:{Mon:[["16:30","18:00"],["18:00","19:30"]],Tue:[["16:30","18:00"]],Wed:[["16:30","18:00"],["18:00","19:30"]],Thu:[["16:30","18:00"]],Fri:[],Sat:[["09:00","12:00"]],Sun:[["15:00","17:00"]]},
+    booked:["Mon 16:30","Wed 18:00","Sat 09:00"]
+  },
+  {
+    id:"t7", name:"Harikrishnan Pillai", city:"Palakkad",
+    instruments:["Mridangam"],
+    modes:["At teacher's place","Online"],
+    languages:["Malayalam","Tamil"],
+    exp:24, fee:"₹550 / hr", phone:"919999900007",
+    bio:"Mridangam and konnakol. Strong on tala fundamentals — useful even for vocalists who want laya sense.",
+    color:"#933526",
+    slots:{Mon:[["06:00","07:30"],["17:00","18:30"]],Tue:[["06:00","07:30"]],Wed:[["06:00","07:30"],["17:00","18:30"]],Thu:[["06:00","07:30"]],Fri:[["17:00","18:30"]],Sat:[["06:00","08:00"]],Sun:[["06:00","08:00"],["16:00","18:00"]]},
+    booked:["Wed 06:00"]
+  },
+  {
+    id:"t8", name:"Fathima Rasheed", city:"Malappuram",
+    instruments:["Light Music & Film Songs"],
+    modes:["Online","At your home"],
+    languages:["Malayalam","Hindi","English"],
+    exp:7, fee:"₹500 / hr", phone:"919999900008",
+    bio:"Playback-style singing, mic technique and breath control. Popular with students prepping for stage shows.",
+    color:"#8E2F52",
+    slots:{Mon:[["19:00","20:30"]],Tue:[["19:00","20:30"]],Wed:[["19:00","20:30"]],Thu:[],Fri:[["19:00","20:30"]],Sat:[["11:00","13:00"],["19:00","21:00"]],Sun:[["11:00","13:00"]]},
+    booked:["Tue 19:00","Sat 11:00"]
+  },
+  {
+    id:"t9", name:"Gopika Menon", city:"Kochi",
+    instruments:["Violin","Carnatic Vocal"],
+    modes:["Online","At teacher's place"],
+    languages:["Malayalam","English"],
+    exp:12, fee:"₹600 / hr", phone:"919999900009",
+    bio:"Carnatic violin, with a patient beginner track for children aged 7 and up.",
+    color:"#6B2430",
+    slots:{Mon:[["16:00","17:30"]],Tue:[["16:00","17:30"],["18:00","19:30"]],Wed:[["16:00","17:30"]],Thu:[["18:00","19:30"]],Fri:[["16:00","17:30"]],Sat:[["08:00","10:00"],["16:00","18:00"]],Sun:[]},
+    booked:["Tue 16:00"]
+  },
+  {
+    id:"t10", name:"Sebastian Vargheese", city:"Alappuzha",
+    instruments:["Guitar","Songwriting"],
+    modes:["Online","At teacher's place"],
+    languages:["Malayalam","English"],
+    exp:10, fee:"₹650 / hr", phone:"919999900010",
+    bio:"Fingerstyle guitar and writing your own songs — melody, lyric shape, and recording a rough demo on a phone.",
+    color:"#5A4632",
+    slots:{Mon:[["18:30","20:00"]],Tue:[],Wed:[["18:30","20:00"]],Thu:[["18:30","20:00"]],Fri:[["18:30","20:00"]],Sat:[["10:00","12:00"],["17:00","19:00"]],Sun:[["17:00","19:00"]]},
+    booked:["Wed 18:30"]
+  },
+  {
+    id:"t11", name:"Sooraj Krishnan", city:"Thrissur",
+    instruments:["Flute"],
+    modes:["At teacher's place","Online"],
+    languages:["Malayalam","English","Tamil"],
+    exp:15, fee:"₹550 / hr", phone:"919999900011",
+    bio:"Carnatic flute. Starts everyone on a simple bamboo flute before moving to full-length instruments.",
+    color:"#3F4A2C",
+    slots:{Mon:[["06:30","08:00"]],Tue:[["06:30","08:00"],["17:30","19:00"]],Wed:[["06:30","08:00"]],Thu:[["17:30","19:00"]],Fri:[["06:30","08:00"]],Sat:[["07:00","09:00"],["16:00","18:00"]],Sun:[["07:00","09:00"]]},
+    booked:["Thu 17:30"]
+  }
+];
+
+/* ============================================================
+   SLOT STATE — the anti-double-booking layer
+   ------------------------------------------------------------
+   Three states per slot: open -> held -> confirmed.
+   Tapping a slot and opening WhatsApp places a 30-minute HOLD, so the
+   slot disappears for everyone else while the teacher replies. If the
+   teacher never confirms, the hold lapses and the slot returns.
+
+   HONEST LIMIT: this Store lives in one browser tab. Two students on two
+   phones will NOT see each other's holds. To make this real, keep every
+   call site below identical and reimplement the four Store methods against
+   a shared backend (Firestore is the cheapest fit — its transactions give
+   you the atomic "claim this slot only if still open" that prevents the
+   race outright). Nothing else in this file needs to change.
+   ============================================================ */
+const HOLD_MINUTES = 30;
+
+const Store = {
+  _m:new Map(),
+  key(tid,day,start){ return `${tid}|${day}|${start}`; },
+  seed(){
+    TEACHERS.forEach(t => (t.booked||[]).forEach(b => {
+      const [day,start] = b.split(" ");
+      this._m.set(this.key(t.id,day,start), { status:"confirmed" });
+    }));
+  },
+  get(tid,day,start){                              // -> {status, ref?, expires?}
+    const k = this.key(tid,day,start);
+    const rec = this._m.get(k);
+    if (!rec) return { status:"open" };
+    if (rec.status === "held" && Date.now() >= rec.expires){
+      this._m.delete(k);                           // lapsed — slot returns to the pool
+      return { status:"open" };
+    }
+    return rec;
+  },
+  hold(tid,day,start){
+    if (this.get(tid,day,start).status !== "open") return null;
+    const ref = "SR-" + Math.random().toString(36).slice(2,6).toUpperCase();
+    const rec = { status:"held", ref, expires:Date.now() + HOLD_MINUTES*60000, tid, day, start };
+    this._m.set(this.key(tid,day,start), rec);
+    return rec;
+  },
+  confirm(tid,day,start){ this._m.set(this.key(tid,day,start), { status:"confirmed" }); },
+  release(tid,day,start){ this._m.delete(this.key(tid,day,start)); },
+  holds(){ return [...this._m.values()].filter(r => r.status === "held" && Date.now() < r.expires); }
+};
+
+/* ============================================================
+   FRESHNESS — the anti-stale-listing layer
+   ------------------------------------------------------------
+   Days since the teacher last confirmed their timings are correct.
+   Fresh teachers rank first; stale ones keep their slots visible but
+   clearly flagged, and drop out of "Suggest a good time" entirely so we
+   never recommend a slot we don't trust.
+   ============================================================ */
+const DAYS_SINCE_CONFIRMED = {
+  t1:2, t2:5, t3:26, t4:9, t5:1, t6:16, t7:34, t8:4, t9:12, t10:21, t11:3
+};
+const FRESH_DAYS = 7;    // green
+const STALE_DAYS = 21;   // red beyond this
+
+function freshness(t){
+  const d = t.updatedDays;
+  if (d <= FRESH_DAYS)  return { level:"ok",    label:d <= 1 ? "Confirmed today" : `Confirmed ${d} days ago` };
+  if (d <= STALE_DAYS){
+    const w = Math.max(1, Math.round(d/7));
+    return { level:"warn", label:`Confirmed ${w} week${w===1?"":"s"} ago` };
+  }
+  return { level:"stale", label:"Timings unconfirmed" };
+}
+const isStale = t => t.updatedDays > STALE_DAYS;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const uniq = a => [...new Set(a)].sort();
+const minsLeft = rec => Math.max(0, Math.ceil((rec.expires - Date.now())/60000));
+
+function to12(hhmm){
+  const [h,m] = hhmm.split(":").map(Number);
+  const ap = h < 12 ? "am" : "pm";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return m === 0 ? `${h12}${ap}` : `${h12}:${String(m).padStart(2,"0")}${ap}`;
+}
+function slotLabel(s,e){ return `${to12(s)}–${to12(e)}`; }
+function hourOf(hhmm){ return Number(hhmm.split(":")[0]); }
+
+// A slot is an hour band; split ranges longer than 90 min is out of scope for
+// the prototype — teachers offer the whole band and agree exact length on chat.
+function allSlots(t){
+  const out = [];
+  DAYS.forEach(d => (t.slots[d]||[]).forEach(([s,e]) => {
+    const rec = Store.get(t.id, d, s);
+    out.push({day:d, start:s, end:e, status:rec.status, rec, full:rec.status !== "open"});
+  }));
+  return out;
+}
+function openSlotCount(t){ return allSlots(t).filter(s => !s.full).length; }
+
+function bandOf(hh){
+  if (hh < 9) return "early";
+  if (hh < 16) return "day";
+  return "evening";
+}
+function matchesWhen(slot, when){
+  if (when === "any") return true;
+  if (when === "weekend") return slot.day === "Sat" || slot.day === "Sun";
+  return bandOf(hourOf(slot.start)) === when;
+}
+
+/* ============================================================
+   STATE + FILTERING
+   ============================================================ */
+const state = { instrument:"", city:"", mode:"", day:"", lang:"", q:"", fresh:"" };
+
+const ALL_INSTRUMENTS = uniq(TEACHERS.flatMap(t => t.instruments));
+const ALL_CITIES = uniq(TEACHERS.map(t => t.city));
+const ALL_LANGS = uniq(TEACHERS.flatMap(t => t.languages));
+
+function filtered(){
+  const q = state.q.trim().toLowerCase();
+  return TEACHERS.filter(t => {
+    if (state.instrument && !t.instruments.includes(state.instrument)) return false;
+    if (state.city && t.city !== state.city) return false;
+    if (state.mode && !t.modes.includes(state.mode)) return false;
+    if (state.lang && !t.languages.includes(state.lang)) return false;
+    if (state.fresh && isStale(t)) return false;
+    if (state.day && !allSlots(t).some(s => s.day === state.day && !s.full)) return false;
+    if (q){
+      const hay = [t.name,t.city,t.bio,...t.instruments,...t.languages,...t.modes].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  })
+  // Teachers who keep their timings current earn the top of the list.
+  .sort((a,b) => a.updatedDays - b.updatedDays);
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function initials(name){
+  return name.split(/\s+/).slice(0,2).map(w => w[0]).join("").toUpperCase();
+}
+
+function teacherCard(t){
+  const el = document.createElement("article");
+  el.className = "card" + (isStale(t) ? " is-stale" : "");
+  const open = openSlotCount(t);
+
+  const stale = isStale(t);
+  const f = freshness(t);
+
+  const days = DAYS.map(d => {
+    const slots = (t.slots[d]||[]);
+    if (!slots.length) return "";
+    const pills = slots.map(([s,e]) => {
+      const rec = Store.get(t.id, d, s);
+      const label = slotLabel(s,e);
+      if (rec.status === "confirmed")
+        return `<button class="slot full" disabled aria-disabled="true" title="Already taken">${label}</button>`;
+      if (rec.status === "held")
+        return `<button class="slot held" disabled aria-disabled="true"
+                  data-hold-key="${t.id}|${d}|${s}"
+                  title="Someone is booking this — free again in ${minsLeft(rec)} min">
+                  ${label} <span class="hold-left">held ${minsLeft(rec)}m</span></button>`;
+      return `<button class="slot${stale?" unconfirmed":""}"
+                data-teacher="${t.id}" data-day="${d}" data-start="${s}" data-end="${e}"
+                ${stale?'title="Timings not recently confirmed — ask before you plan around it"':""}>${label}</button>`;
+    }).join("");
+    return `<div class="day-row"><div class="day-name">${d}</div><div class="day-slots">${pills}</div></div>`;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="card-top">
+      <div class="avatar" style="background:${t.color}">${initials(t.name)}</div>
+      <div>
+        <h3>${t.name}</h3>
+        <p class="meta">${t.city} · ${t.exp} yrs teaching · ${t.languages.join(", ")}</p>
+        <p style="margin-top:7px"><span class="fresh ${f.level}"><span class="dot"></span>${f.label}</span></p>
+      </div>
+    </div>
+    <div class="tags">
+      ${t.instruments.map(i => `<span class="tag">${i}</span>`).join("")}
+      ${t.modes.map(m => `<span class="tag mode">${m}</span>`).join("")}
+    </div>
+    <p class="bio">${t.bio}</p>
+    <div class="card-facts">
+      <div><span>Fee</span><b>${t.fee}</b></div>
+      <div><span>Open slots</span><b>${open} this week</b></div>
+    </div>
+    ${stale ? `<div class="stale-note">${t.name.split(" ")[0]} hasn't confirmed these timings in
+      ${t.updatedDays} days. Message first and check before planning around them.</div>` : ""}
+    <div class="avail">
+      <div class="avail-head">
+        <h4>Weekly availability</h4>
+        <span class="ist">IST · tap a slot to book</span>
+      </div>
+      ${days || '<p class="no-slots">No slots published this week.</p>'}
+    </div>
+    <div class="card-actions">
+      <button class="btn wa" data-teacher="${t.id}" data-generic="1">Message on WhatsApp</button>
+    </div>
+  `;
+  return el;
+}
+
+function render(){
+  const list = filtered();
+  const grid = $("#grid");
+  grid.innerHTML = "";
+  list.forEach(t => grid.appendChild(teacherCard(t)));
+  $("#empty").style.display = list.length ? "none" : "block";
+  // When a day is selected, count only that day's slots — otherwise the number
+  // claims week-wide availability the visitor can't actually use.
+  const slots = list.reduce((n,t) =>
+    n + allSlots(t).filter(s => !s.full && (!state.day || s.day === state.day)).length, 0);
+  $("#result-count").textContent =
+    `${list.length} teacher${list.length===1?"":"s"}` +
+    (state.instrument ? ` for ${state.instrument}` : "") +
+    (state.city ? ` in ${state.city}` : "") +
+    ` · ${slots} open slot${slots===1?"":"s"}` + (state.day ? ` on ${state.day}` : " this week");
+}
+
+/* ============================================================
+   BOOKING MODAL
+   ============================================================ */
+let current = null;
+let lastFocus = null;
+
+// Prefer whatever the visitor actually filtered for, so the message matches
+// their intent rather than the teacher's first-listed instrument/format.
+function subjectFor(t){
+  return (state.instrument && t.instruments.includes(state.instrument))
+    ? state.instrument : t.instruments[0];
+}
+function formatFor(t){
+  if (state.mode && t.modes.includes(state.mode)) return state.mode;
+  return t.modes.length === 1 ? t.modes[0] : `${t.modes.join(" or ")} — whichever suits you`;
+}
+
+function buildMessage(t, slot, studentName, ref){
+  const who = studentName.trim() || "[your name]";
+  const subject = subjectFor(t);
+  if (!slot){
+    return `Namaskaram ${t.name.split(" ")[0]}, I found you on Sruthi (Kerala's Music Circle). `
+      + `I'd like to learn ${subject}. Could you tell me which slots are open? `
+      + `— ${who}`;
+  }
+  const staleLine = isStale(t)
+    ? `\nYour timings on Sruthi were last confirmed ${t.updatedDays} days ago — is this slot still right?\n`
+    : "";
+  return `Namaskaram ${t.name.split(" ")[0]}, I found you on Sruthi (Kerala's Music Circle).\n\n`
+    + `I'd like to book a ${subject} lesson:\n`
+    + `• ${slot.day}, ${slotLabel(slot.start, slot.end)} (IST)\n`
+    + `• Format: ${formatFor(t)}\n`
+    + `• Fee noted: ${t.fee}\n`
+    + `• Booking ref: ${ref || "—"}\n`
+    + staleLine
+    + `\nThis slot is held for you for ${HOLD_MINUTES} minutes. `
+    + `Reply CONFIRM ${ref || ""} to lock it in.\n\n— ${who}`;
+}
+
+function refreshMessage(){
+  if (!current) return;
+  $("#m-msg").value = buildMessage(current.t, current.slot, $("#m-name").value, current.ref);
+  syncLink();
+}
+function syncLink(){
+  if (!current) return;
+  const text = encodeURIComponent($("#m-msg").value);
+  $("#m-send").href = `https://wa.me/${current.t.phone}?text=${text}`;
+}
+
+function openModal(teacherId, slot){
+  const t = TEACHERS.find(x => x.id === teacherId);
+  if (!t) return;
+  // Placing the hold at open time is deliberate: the slot is off the market
+  // from the moment someone starts writing, not after they remember to send.
+  let ref = null;
+  if (slot){
+    const held = Store.hold(t.id, slot.day, slot.start);
+    if (!held){
+      toast("Someone just took that slot — showing the latest availability");
+      render();
+      return;
+    }
+    ref = held.ref;
+    render();
+    renderHolds();
+  }
+  current = { t, slot, ref };
+  $("#modal-title").textContent = `Message ${t.name}`;
+  $("#booking-summary").innerHTML = slot
+    ? `<b>${slot.day}, ${slotLabel(slot.start, slot.end)}</b> · ${t.instruments[0]} · ${t.city} · ${t.fee}`
+    : `<b>General enquiry</b> · ${t.instruments.join(", ")} · ${t.city} · ${t.fee}`;
+  $("#m-note").textContent = slot
+    ? `This slot is now held for ${HOLD_MINUTES} minutes under ref ${ref}, so nobody else can take it while `
+      + `${t.name.split(" ")[0]} replies. It is not booked until they confirm. `
+      + `(Demo number — this will not reach a real person.)`
+    : `Opens WhatsApp with this message ready to send to ${t.name}. `
+      + `(Demo number — this will not reach a real person.)`;
+  refreshMessage();
+  lastFocus = document.activeElement;
+  $("#backdrop").classList.add("on");
+  $("#m-name").focus();
+}
+function closeModal(){
+  // Closing without sending gives the slot straight back rather than parking
+  // it for 30 minutes for no reason.
+  if (current && current.slot && !current.sent){
+    Store.release(current.t.id, current.slot.day, current.slot.start);
+    render(); renderHolds();
+  }
+  $("#backdrop").classList.remove("on");
+  current = null;
+  if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  lastFocus = null;
+}
+// Keep tabbing inside the dialog while it is open.
+function trapFocus(e){
+  if (e.key !== "Tab" || !$("#backdrop").classList.contains("on")) return;
+  const f = [...$("#backdrop").querySelectorAll('button, a[href], input, textarea')]
+    .filter(el => !el.disabled && el.offsetParent !== null);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+}
+
+function toast(msg){
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("on");
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove("on"), 2200);
+}
+
+/* ============================================================
+   ACTIVE HOLDS PANEL
+   In production the confirm/decline buttons here do not exist — the teacher's
+   WhatsApp reply drives the state via a webhook. They stand in for that reply
+   so the three slot states are visible in a demo.
+   ============================================================ */
+function renderHolds(){
+  const holds = Store.holds();
+  const panel = $("#holds");
+  panel.classList.toggle("on", holds.length > 0);
+  $("#holds-list").innerHTML = holds.map(h => {
+    const t = TEACHERS.find(x => x.id === h.tid);
+    return `<div class="hold-row">
+      <div><b>${t.name.split(" ")[0]}</b> · ${h.day}, ${to12(h.start)}
+        <span class="ref">${h.ref}</span></div>
+      <div style="color:var(--muted);font-size:12px">frees up in ${minsLeft(h)} min</div>
+      <div class="acts">
+        <button class="yes" data-hold-confirm="${h.tid}|${h.day}|${h.start}">Teacher confirms</button>
+        <button data-hold-release="${h.tid}|${h.day}|${h.start}">Declines</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// Expire lapsed holds and keep the countdowns honest without a full re-render.
+function tick(){
+  let changed = false;
+  document.querySelectorAll("[data-hold-key]").forEach(el => {
+    const [tid,day,start] = el.dataset.holdKey.split("|");
+    const rec = Store.get(tid,day,start);
+    if (rec.status !== "held"){ changed = true; return; }
+    const span = el.querySelector(".hold-left");
+    if (span) span.textContent = `held ${minsLeft(rec)}m`;
+  });
+  if (changed){ render(); }
+  renderHolds();
+}
+
+/* ============================================================
+   SUGGEST A TIME
+   ============================================================ */
+function suggestTimes(){
+  const inst = $("#s-instrument").value;
+  const when = $("#s-when").value;
+  const city = $("#s-city").value;
+
+  // Stale teachers are excluded outright — never recommend a slot we don't trust.
+  const pool = TEACHERS.filter(t =>
+    !isStale(t) &&
+    (!inst || t.instruments.includes(inst)) &&
+    (!city || t.city === city)
+  );
+
+  const buckets = new Map();
+  pool.forEach(t => allSlots(t).forEach(s => {
+    if (s.full || !matchesWhen(s, when)) return;
+    const key = `${s.day} ${s.start}`;
+    if (!buckets.has(key)) buckets.set(key, { day:s.day, start:s.start, end:s.end, teachers:[] });
+    buckets.get(key).teachers.push(t);
+  }));
+
+  const ranked = [...buckets.values()]
+    .sort((a,b) => b.teachers.length - a.teachers.length
+      || DAYS.indexOf(a.day) - DAYS.indexOf(b.day)
+      || a.start.localeCompare(b.start))
+    .slice(0,4);
+
+  const out = $("#s-out");
+  out.classList.add("on");
+
+  if (!ranked.length){
+    out.innerHTML = `<p class="no-slots">Nothing open with that combination. Try "Any time", or widen the town.
+      (Teachers who haven't confirmed their timings recently are left out of suggestions.)</p>`;
+    return;
+  }
+
+  out.innerHTML = ranked.map((r,i) => `
+    <div class="slot-rec">
+      <div style="display:flex;gap:11px;align-items:center">
+        <div class="rank">${i+1}</div>
+        <div>
+          <div class="when">${r.day}, ${slotLabel(r.start, r.end)}</div>
+          <div class="who">${r.teachers.length} teacher${r.teachers.length===1?"":"s"} free — ${r.teachers.map(t=>t.name.split(" ")[0]).join(", ")}</div>
+        </div>
+      </div>
+      <button class="btn wa" data-teacher="${r.teachers[0].id}" data-day="${r.day}" data-start="${r.start}" data-end="${r.end}">
+        Book with ${r.teachers[0].name.split(" ")[0]}
+      </button>
+    </div>
+  `).join("");
+}
+
+/* ============================================================
+   WIRING
+   ============================================================ */
+function fillSelect(sel, items, anyLabel){
+  sel.innerHTML = `<option value="">${anyLabel}</option>` +
+    items.map(i => `<option value="${i}">${i}</option>`).join("");
+}
+
+function clearFilters(){
+  Object.assign(state, { instrument:"", city:"", mode:"", day:"", lang:"", q:"", fresh:"" });
+  $("#f-search").value = ""; $("#f-city").value = ""; $("#f-mode").value = "";
+  $("#f-day").value = ""; $("#f-lang").value = ""; $("#f-fresh").value = "";
+  document.querySelectorAll("#instrument-chips .chip").forEach(c =>
+    c.setAttribute("aria-pressed", c.dataset.value === "" ? "true" : "false"));
+  render();
+}
+
+function init(){
+  TEACHERS.forEach(t => t.updatedDays = DAYS_SINCE_CONFIRMED[t.id] ?? 99);
+  Store.seed();
+
+  // stats
+  $("#stat-teachers").textContent = TEACHERS.length;
+  $("#stat-slots").textContent = TEACHERS.reduce((n,t)=>n+openSlotCount(t),0);
+  $("#stat-cities").textContent = TEACHERS.filter(t => !isStale(t)).length + "/" + TEACHERS.length;
+
+  // chips
+  const chipWrap = $("#instrument-chips");
+  chipWrap.innerHTML = [["","All instruments"], ...ALL_INSTRUMENTS.map(i=>[i,i])]
+    .map(([v,l]) => `<button class="chip" data-value="${v}" aria-pressed="${v===""}">${l}</button>`).join("");
+  chipWrap.addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    state.instrument = chip.dataset.value;
+    chipWrap.querySelectorAll(".chip").forEach(c =>
+      c.setAttribute("aria-pressed", c === chip ? "true" : "false"));
+    render();
+  });
+
+  // selects
+  fillSelect($("#f-city"), ALL_CITIES, "Any town");
+  fillSelect($("#f-lang"), ALL_LANGS, "Any language");
+  fillSelect($("#s-city"), ALL_CITIES, "Anywhere in Kerala");
+  fillSelect($("#s-instrument"), ALL_INSTRUMENTS, "Anything");
+  $("#f-day").innerHTML = `<option value="">Any day</option>` +
+    DAYS.map(d => `<option value="${d}">${d}</option>`).join("");
+
+  $("#f-city").onchange  = e => { state.city = e.target.value; render(); };
+  $("#f-mode").onchange  = e => { state.mode = e.target.value; render(); };
+  $("#f-day").onchange   = e => { state.day  = e.target.value; render(); };
+  $("#f-lang").onchange  = e => { state.lang = e.target.value; render(); };
+  $("#f-fresh").onchange = e => { state.fresh = e.target.value; render(); };
+  $("#f-search").oninput = e => { state.q    = e.target.value; render(); };
+  $("#f-clear").onclick  = clearFilters;
+  $("#s-go").onclick     = suggestTimes;
+
+  // one delegated handler covers slot pills, card buttons and suggestion buttons
+  document.addEventListener("click", e => {
+    const btn = e.target.closest("[data-teacher]");
+    if (!btn || btn.disabled) return;
+    const slot = btn.dataset.day
+      ? { day:btn.dataset.day, start:btn.dataset.start, end:btn.dataset.end }
+      : null;
+    openModal(btn.dataset.teacher, slot);
+  });
+
+  document.addEventListener("click", e => {
+    const c = e.target.closest("[data-hold-confirm]");
+    const r = e.target.closest("[data-hold-release]");
+    if (!c && !r) return;
+    const [tid,day,start] = (c || r).dataset[c ? "holdConfirm" : "holdRelease"].split("|");
+    if (c){ Store.confirm(tid,day,start); toast("Teacher confirmed — slot locked"); }
+    else  { Store.release(tid,day,start); toast("Slot released back to the pool"); }
+    render(); renderHolds();
+  });
+
+  // Opening WhatsApp means the request really went out — keep the hold alive.
+  $("#m-send").addEventListener("click", () => {
+    if (current){ current.sent = true; toast(`Slot held for ${HOLD_MINUTES} minutes`); }
+  });
+
+  $("#modal-close").onclick = closeModal;
+  $("#backdrop").addEventListener("click", e => { if (e.target === $("#backdrop")) closeModal(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+  document.addEventListener("keydown", trapFocus);
+  $("#m-name").oninput = refreshMessage;
+  $("#m-msg").oninput = syncLink;
+  $("#m-copy").onclick = async () => {
+    try { await navigator.clipboard.writeText($("#m-msg").value); toast("Message copied"); }
+    catch { $("#m-msg").select(); toast("Press Ctrl/Cmd+C to copy"); }
+  };
+
+  render();
+  suggestTimes();
+  renderHolds();
+  setInterval(tick, 10000);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

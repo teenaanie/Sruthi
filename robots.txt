@@ -1,0 +1,5 @@
+# While Sruthi holds demo data, keep it out of search engines entirely.
+# Delete this file (and the X-Robots-Tag line in vercel.json) once real,
+# consented teacher listings replace the samples.
+User-agent: *
+Disallow: /
