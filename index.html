@@ -33,6 +33,8 @@
   a{color:inherit}
   button{font:inherit;cursor:pointer}
   .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  /* the header is sticky, so anchor targets need clearance or they land underneath it */
+  #find,#teachers,#news,#songs{scroll-margin-top:96px}
 
   /* ---------- demo banner ---------- */
   .demo-banner{
@@ -77,7 +79,7 @@
     pointer-events:none;user-select:none;opacity:.9;
   }
   .hero-art svg{display:block;width:100%;height:auto}
-  .hero{padding:56px 0 46px;position:relative;z-index:1}
+  .hero{padding-top:56px;padding-bottom:46px;position:relative;z-index:1}
   .hero h1{font-size:clamp(28px,4.4vw,42px);line-height:1.12;max-width:22ch}
   .hero p.lede{color:var(--muted);font-size:16.5px;max-width:46ch;margin:14px 0 0}
   .hero-stats{display:flex;gap:26px;margin-top:22px;flex-wrap:wrap}
@@ -120,7 +122,7 @@
   }
 
   /* ---------- filters ---------- */
-  .filters{padding:22px 0 6px}
+  .filters{padding-top:22px;padding-bottom:6px}
   .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
   .chip{
     border:1px solid var(--line);background:var(--surface);border-radius:999px;
@@ -226,6 +228,7 @@
     text-align:center;padding:50px 20px;color:var(--muted);
     border:1px dashed var(--line);border-radius:var(--radius);
   }
+  .avail-toggle,.filter-toggle{display:none}
 
   /* ---------- announcements ---------- */
   .ann-strip{
@@ -405,11 +408,133 @@
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
   @media (max-width:640px){
-    .header-inner{flex-wrap:wrap}
-    .nav{width:100%;order:3;overflow-x:auto}
-    .grid{grid-template-columns:1fr}
-    .songs{padding:22px}
+    /* --- header: one compact row + a nav strip that scrolls, not wraps --- */
+    .header-inner{flex-wrap:wrap;padding:10px 0;gap:10px}
+    .brand-mark{width:34px;height:34px;font-size:18px}
+    .brand-name{font-size:17px}
+    .brand-sub{font-size:10px}
+    .header-inner > .btn.ghost{padding:9px 13px;font-size:13.5px;min-height:44px}
+    .nav{
+      width:100%;order:3;overflow-x:auto;flex-wrap:nowrap;
+      gap:2px;margin:0 -20px;padding:0 20px 2px;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .nav::-webkit-scrollbar{display:none}
+    .nav a{white-space:nowrap;padding:9px 12px;min-height:40px;display:flex;align-items:center}
+
+    /* --- hero: keep the artwork clear of the text --- */
+    .hero{padding-top:30px;padding-bottom:178px}
+    .hero h1{font-size:27px;max-width:100%}
+    .hero p.lede{font-size:15.5px;max-width:100%;margin-top:11px}
+    .hero-art{width:64%;right:-5%;bottom:-6px;opacity:.45}
+    .hero-stats{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;
+    }
+    .stat b{font-size:19px}
+    .stat span{font-size:11px;line-height:1.3;display:block}
+
+    /* --- announcement strip: real tap targets --- */
+    .ann-strip .wrap{padding:9px 20px;gap:9px}
+    .ann-strip .pill{font-size:10px;padding:3px 8px}
+    .ann-strip a.more{min-height:44px;display:flex;align-items:center}
+    .ann-strip button.x{min-width:44px;min-height:44px;font-size:20px}
+
+    /* --- suggest panel --- */
+    .suggest{padding:16px;margin:18px 0 4px}
+    .suggest-row{gap:12px}
+    .field{flex:1 1 100%;min-width:0}
+    .suggest-row .field[style]{width:100%;flex:1 1 100% !important}
+    #s-go{width:100%;min-height:48px}
+    .slot-rec{padding:12px}
+    .slot-rec .btn{width:100%;min-height:44px}
+
+    /* --- instrument chips scroll sideways instead of eating four rows --- */
+    .chips{
+      flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 12px;padding:2px 20px 8px;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .chips::-webkit-scrollbar{display:none}
+    .chip{white-space:nowrap;min-height:42px;display:flex;align-items:center}
+
+    /* --- the rest of the filters fold away --- */
+    .filter-toggle{
+      display:flex;align-items:center;justify-content:space-between;width:100%;
+      background:var(--surface);border:1px solid var(--line);border-radius:10px;
+      padding:12px 15px;font-size:14px;font-weight:600;color:var(--ink);min-height:48px;
+    }
+    .filter-toggle .caret{transition:transform .18s ease;color:var(--muted)}
+    .filter-toggle[aria-expanded="true"] .caret{transform:rotate(180deg)}
+    .filter-row{display:none;margin-top:10px}
+    .filter-row.open{display:flex}
+    .filter-row .field{flex:1 1 calc(50% - 5px);min-width:0}
+    .filter-row .field[style]{flex:1 1 100% !important}
+    #f-clear{width:100%;min-height:44px}
+    select,input[type=text],textarea{min-height:44px;font-size:16px}
+
+    /* --- teacher cards: timings collapse so the list stays scannable --- */
+    .grid{grid-template-columns:1fr;gap:14px}
+    .card{padding:15px}
+    .card-top{gap:11px}
+    .avatar{width:46px;height:46px;font-size:17px}
+    .card h3{font-size:16px}
+    .meta{font-size:12.5px}
+    .tags{
+      flex-wrap:nowrap;overflow-x:auto;margin-top:10px;padding-bottom:3px;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    }
+    .tags::-webkit-scrollbar{display:none}
+    .tag{white-space:nowrap;flex:none}
+    .bio{
+      margin-top:9px;font-size:13px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .card-facts{margin-top:10px;gap:14px}
+    .card-facts div span{display:inline;font-size:11px}
+    .card-facts div b{display:inline;margin-left:4px}
+    .avail{margin-top:11px;padding-top:10px}
+    .avail-days{max-height:96px;overflow:hidden;position:relative}
+    .avail.open .avail-days{max-height:none}
+    .avail-days::after{
+      content:"";position:absolute;left:0;right:0;bottom:0;height:46px;
+      background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.85) 55%,#fff);
+      pointer-events:none;
+    }
+    .avail.open .avail-days::after{display:none}
+    .avail-toggle{
+      display:block;width:100%;margin-top:9px;background:none;border:none;
+      color:var(--primary);font-size:13.5px;font-weight:600;padding:11px 0;min-height:44px;
+    }
+    .slot{min-height:40px;display:flex;align-items:center;font-size:13px}
+    .card-actions .btn{min-height:48px}
+
+    /* --- announcements --- */
+    .ann-list{grid-template-columns:1fr;gap:12px}
+    .ann-head{margin-top:26px}
+    .ann-head h2{font-size:20px}
+    .ann-head .btn{width:100%;min-height:44px}
+    .ann .act{margin-top:6px;margin-bottom:-8px;padding-top:0}
+    .ann .act a{min-height:44px;display:inline-flex;align-items:center}
+    #find,#teachers,#news,#songs{scroll-margin-top:132px}
+
+    .songs{padding:22px;text-align:left}
+    .songs .btn{width:100%;min-height:48px;justify-content:center}
+
+    /* --- dialogs --- */
+    .backdrop{padding:0;align-items:flex-end}
+    .modal{border-radius:16px 16px 0 0;max-height:94vh;padding:20px 18px 26px}
+    .modal-actions{flex-direction:column}
+    .modal-actions .btn{width:100%;min-height:48px}
+    .form-grid{grid-template-columns:1fr}
+    .bday{flex-wrap:wrap}
+    .bslot select{min-height:38px;font-size:15px}
+    .checks label{min-height:42px}
+
     .holds{left:10px;right:10px;bottom:10px;max-width:none}
+    .holds .acts button{min-height:40px;flex:1}
+    .ann-past{margin-top:14px}
+    .ann-past button{min-height:44px;padding:0 4px}
+    .brand{min-height:44px}
+    footer.site a{display:inline-block;min-height:44px;line-height:44px}
   }
 </style>
 </head>
@@ -564,7 +689,10 @@
 
   <section class="wrap filters" id="teachers">
     <div class="chips" id="instrument-chips" role="group" aria-label="Filter by instrument"></div>
-    <div class="filter-row">
+    <button class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filter-body">
+      <span>More filters</span><span class="caret">&#9662;</span>
+    </button>
+    <div class="filter-row" id="filter-body">
       <div class="field">
         <label for="f-search">Search</label>
         <input type="text" id="f-search" placeholder="Name, style, town…">
@@ -1244,7 +1372,8 @@ function teacherCard(t){
         <h4>Weekly availability</h4>
         <span class="ist">IST · tap a slot to book</span>
       </div>
-      ${days || '<p class="no-slots">No slots published this week.</p>'}
+      <div class="avail-days">${days || '<p class="no-slots">No slots published this week.</p>'}</div>
+      ${days ? `<button class="avail-toggle" data-avail-toggle aria-expanded="false">Show all timings</button>` : ""}
     </div>
     <div class="card-actions">
       <button class="btn wa" data-teacher="${t.id}" data-generic="1">Message on WhatsApp</button>
@@ -1917,6 +2046,13 @@ function init(){
   $("#f-day").onchange   = e => { state.day  = e.target.value; render(); };
   $("#f-lang").onchange  = e => { state.lang = e.target.value; render(); };
   $("#f-fresh").onchange = e => { state.fresh = e.target.value; render(); };
+
+  // A filter that is set but out of sight is a trap — keep the panel open once used.
+  ["#f-city","#f-mode","#f-day","#f-lang","#f-fresh","#f-search"].forEach(sel => {
+    document.querySelector(sel).addEventListener("change", () => {
+      if (Object.values(state).some(Boolean)) $("#filter-body").classList.add("open");
+    });
+  });
   $("#f-search").oninput = e => { state.q    = e.target.value; render(); };
   $("#f-clear").onclick  = clearFilters;
   $("#s-go").onclick     = suggestTimes;
@@ -1945,6 +2081,23 @@ function init(){
   $("#m-send").addEventListener("click", () => {
     if (current){ current.sent = true; toast(`Slot held for ${HOLD_MINUTES} minutes`); }
   });
+
+  // availability collapse (mobile only — the button is display:none above 640px)
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-avail-toggle]");
+    if (!t) return;
+    const box = t.closest(".avail");
+    const open = box.classList.toggle("open");
+    t.textContent = open ? "Show fewer timings" : "Show all timings";
+    t.setAttribute("aria-expanded", String(open));
+  });
+
+  $("#filter-toggle").onclick = () => {
+    const body = $("#filter-body");
+    const open = body.classList.toggle("open");
+    $("#filter-toggle").setAttribute("aria-expanded", String(open));
+    $("#filter-toggle").querySelector("span").textContent = open ? "Hide filters" : "More filters";
+  };
 
   $("#modal-close").onclick = closeModal;
   $("#backdrop").addEventListener("click", e => { if (e.target === $("#backdrop")) closeModal(); });
